@@ -5,6 +5,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
 import { FileModule } from './file/file.module';
+import { WelcomesModule } from './welcomes/welcomes.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { FileModule } from './file/file.module';
     AuthModule,
     MailModule,
     FileModule,
+    WelcomesModule,
   ],
   controllers: [],
   providers: [],

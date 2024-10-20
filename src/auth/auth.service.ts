@@ -6,11 +6,17 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import * as nodemailer from 'nodemailer';
 
+import SMTPTransport from 'nodemailer/lib/smtp-transport';
+import { ConfigService } from '@nestjs/config';
+import { MailService } from '../mail/mail.service';
+
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     private jwtService: JwtService,
+    private configService: ConfigService,
+    private mailService: MailService,
   ) {}
 
   async register(email: string, password: string) {
@@ -23,6 +29,8 @@ export class AuthService {
     const verificationToken = this.jwtService.sign({ email });
 
     const newUser = new this.userModel({
+      name: 'User_' + Math.random(),
+      username: 'User_' + Math.random(),
       email,
       password: hashedPassword,
       verificationToken,
@@ -68,21 +76,13 @@ export class AuthService {
   }
 
   async sendVerificationEmail(email: string, token: string) {
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASS,
-      },
-    });
+    const url = `http://localhost:3001/api/v1/auth/verify-email?token=${token}`;
 
-    const url = `http://localhost:3000/auth/verify-email?token=${token}`;
-
-    await transporter.sendMail({
-      from: '"Your App" <noreply@yourapp.com>',
-      to: email,
-      subject: 'Email Verification',
-      html: `Click <a href="${url}">here</a> to verify your email.`,
-    });
+    await this.mailService.sendMail(
+      'noreply@leganux.com',
+      [email],
+      'Email Verification',
+      `Click <a href="${url}">here</a> to verify your email.`,
+    );
   }
 }
