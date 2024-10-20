@@ -167,4 +167,18 @@ export class ApiatoController<TCreateDto, TUpdateDto, TService> {
     const resp = await (this.service as any).findIdAndDelete(id, query);
     return res.status(resp.status).json(resp);
   }
+
+  @Post('/datatable')
+  async Datatable(
+    @Res() res: Response,
+    @Body() body: any,
+    @QueryParams() query: any,
+  ) {
+    const resp = await (this.service as any).Datatable(
+      body,
+      body.pipeline,
+      query.search_fields,
+    );
+    return res.status(resp.status).json(resp);
+  }
 }

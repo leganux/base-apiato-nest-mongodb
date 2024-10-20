@@ -1,6 +1,5 @@
-import { Model, Query, Schema } from 'mongoose';
+import { Model, Schema } from 'mongoose';
 import { Injectable } from '@nestjs/common';
-
 import ObjectId = Schema.ObjectId;
 
 interface PopulateObject {
@@ -637,7 +636,6 @@ export abstract class ApiatoService<T, CreateDto, UpdateDto> {
       }
 
       const { isLogic } = query;
-      console.log(isLogic);
       let query_: any;
       if (isLogic) {
         const date = new Date().toDateString();
@@ -656,6 +654,132 @@ export abstract class ApiatoService<T, CreateDto, UpdateDto> {
     } catch (error) {
       console.error(error);
       return Responses.internalServerError(error.message);
+    }
+  }
+
+  async Datatable(body: any, pipeline_: any, search_fields: any): Promise<any> {
+    try {
+      let pipeline2 = [];
+      const pipeline = [...pipeline_];
+
+      const response: any = {
+        message: 'OK',
+        recordsFiltered: 0,
+        recordsTotal: 0,
+        total: 0,
+        success: true,
+        data: {},
+      };
+
+      if (
+        this.options.datatblefIn_ &&
+        typeof this.options.datatblefIn_ == 'function'
+      ) {
+        body = await this.options.datatblefIn_(body, pipeline);
+      }
+
+      const { where, like }: any = body;
+
+      const order: any = {};
+      const search_columns_or = [];
+
+      if (body.columns && body.order) {
+        for (const item of body.order) {
+          const name = body.columns[item.column].data;
+          const search = body.columns[item.column]?.search?.value || '';
+          const dir: any = item.dir;
+          order[name] = dir.toUpperCase() == 'DESC' ? -1 : 1;
+
+          if (search !== '' && this.options.search_by_field) {
+            const inner: any = {};
+            inner[name] = { $regex: search, $options: 'i' };
+            search_columns_or.push(inner);
+          }
+        }
+      }
+
+      if (this.options.search_by_field) {
+        pipeline.push({
+          $match: { $or: search_columns_or },
+        });
+      }
+
+      let fields = [];
+      if (search_fields) {
+        if (typeof search_fields == 'string' && search_fields != '') {
+          fields = search_fields.split(',');
+        }
+        if (typeof search_fields == 'object' && Array.isArray(search_fields)) {
+          fields = search_fields;
+        }
+      }
+
+      if (fields.length > 0 && body?.search?.value != '') {
+        const or = [];
+        for (const item of fields) {
+          const inner: any = {};
+          if (isNaN(Number(body?.search?.value))) {
+            inner[item] = { $regex: body?.search?.value, $options: 'i' };
+          } else {
+            inner[item] = Number(body?.search?.value);
+          }
+          or.push(inner);
+        }
+        pipeline.push({
+          $match: { $or: or },
+        });
+      }
+
+      const find: any = {};
+      if (like) {
+        for (const [key, val] of Object.entries(like)) {
+          find[key] = { $regex: String(val).trim(), $options: 'i' };
+        }
+      }
+      if (where) {
+        for (const [key, val] of Object.entries(where)) {
+          find[key] = val;
+        }
+      }
+
+      pipeline.push({
+        $match: find,
+      });
+
+      const table = await this.model.aggregate(pipeline).allowDiskUse(true);
+      const total = table.length;
+      console.log('total', total);
+
+      pipeline2 = [...pipeline];
+
+      pipeline2.push({
+        $skip: Number(body?.start || 0),
+      });
+      pipeline2.push({
+        $limit: Number(body?.length || 0),
+      });
+
+      pipeline2.push({
+        $sort: order,
+      });
+
+      response.data = await this.model.aggregate(pipeline2).allowDiskUse(true);
+      response.recordsTotal = total;
+      response.recordsFiltered = total;
+      response.total = total;
+      response.status = 200;
+
+      console.log('Pipeline', JSON.stringify(pipeline2));
+
+      return response;
+    } catch (error) {
+      const response: any = {};
+      response.status = 500;
+      response.error = error;
+      response.success = false;
+      response.message = error;
+
+      return response;
     }
   }
 }

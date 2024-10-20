@@ -9,7 +9,7 @@ import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { FileService } from './file.service';
 import { multerOptions } from './../config/multer.config';
 
-@Controller('files')
+@Controller('api/v1/files')
 export class FileController {
   constructor(private readonly fileService: FileService) {}
 
@@ -19,7 +19,7 @@ export class FileController {
     return this.fileService.saveFile(file);
   }
 
-  @Post('upload-multiple')
+  @Post('upload/many')
   @UseInterceptors(FilesInterceptor('files', 10, multerOptions))
   async uploadMultipleFiles(@UploadedFiles() files: Express.Multer.File[]) {
     return this.fileService.saveFiles(files);
