@@ -1,4 +1,18 @@
-export const rolesAndAccessConfig = {
+interface RoleAccess {
+  path: string;
+  method: string;
+  roles: string[];
+}
+
+interface ConfigItem {
+  routes: RoleAccess[];
+}
+
+export interface RolesAndAccessConfig {
+  [key: string]: ConfigItem;
+}
+
+export const rolesAndAccessConfig: RolesAndAccessConfig = {
   user: {
     routes: [
       { path: '/', method: 'post', roles: ['Admin'] },

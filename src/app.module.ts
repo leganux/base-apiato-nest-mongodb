@@ -9,7 +9,19 @@ import { WelcomesModule } from './welcome/welcomes.module';
 import { JwtModule } from '@nestjs/jwt';
 import { User, UserSchema } from './user/schemas/user.schema';
 import { AccessMiddleware } from './core/middleware/access.middleware';
-import { rolesAndAccessConfig } from './core/config/rolesAndAccess.config';
+import {
+  RolesAndAccessConfig,
+  rolesAndAccessConfig,
+} from './core/config/rolesAndAccess.config';
+
+const getPaths = (rolesAndAccessConfig: RolesAndAccessConfig) => {
+  const paths = [];
+  for (const [key] of Object.entries(rolesAndAccessConfig)) {
+    paths.push({ path: '/api/v1/' + key, method: RequestMethod.ALL });
+  }
+  console.log(paths);
+  return paths;
+};
 
 @Module({
   imports: [
@@ -45,6 +57,6 @@ export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AccessMiddleware)
-      .forRoutes({ path: '/api/v1/user', method: RequestMethod.ALL });
+      .forRoutes(...getPaths(rolesAndAccessConfig));
   }
 }
