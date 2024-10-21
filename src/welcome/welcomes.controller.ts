@@ -1,15 +1,5 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { WelcomesService } from './welcomes.service';
-import { CreateWelcomeDto } from './dto/create-welcome.dto';
-import { UpdateWelcomeDto } from './dto/update-welcome.dto';
 
 @Controller('/')
 export class WelcomesController {

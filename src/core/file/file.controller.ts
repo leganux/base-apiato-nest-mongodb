@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { FileService } from './file.service';
-import { multerOptions } from './../config/multer.config';
+import { multerOptions } from '../config/multer.config';
 
 @Controller('api/v1/files')
 export class FileController {
