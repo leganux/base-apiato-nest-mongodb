@@ -44,6 +44,11 @@ export class User {
   @Prop()
   verificationToken?: string;
 
+  @Prop({
+    default: 'User',
+  })
+  role?: string;
+
   @Prop({ type: MongooseSchema.Types.Date, default: null })
   deletedAt: Date;
 }

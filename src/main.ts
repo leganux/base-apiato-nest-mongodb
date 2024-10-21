@@ -5,6 +5,27 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as path from 'node:path';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { NetworkInterfaceInfo, networkInterfaces } from 'os';
+
+function getIPAddress(): string {
+  const interfaces = networkInterfaces();
+  for (const devName in interfaces) {
+    const iface = interfaces[devName];
+    if (iface) {
+      for (let i = 0; i < iface.length; i++) {
+        const alias: NetworkInterfaceInfo = iface[i];
+        if (
+          alias.family === 'IPv4' &&
+          alias.address !== '127.0.0.1' &&
+          !alias.internal
+        ) {
+          return alias.address;
+        }
+      }
+    }
+  }
+  return '0.0.0.0';
+}
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -41,7 +62,17 @@ async function bootstrap() {
 \\_/\\_/(__)  (__)\\_/\\_/(__) \\__/(_)\\____/(____/
                         (c) leganux.net 2021-2024  v. beta-0.0.1 NestJs - MongoDb
 `);
-  console.log(`Application is running on: http://localhost:${port}`);
+  console.log(`Application is running on:
+  
+   - Welcome:
+   Local: http://localhost:${port}
+   Network: http://${getIPAddress()}:${port}
+   
+   - Docs:
+   Local: http://localhost:${port}/api
+   Network: http://${getIPAddress()}:${port}/api
+   
+   `);
 }
 
 bootstrap();

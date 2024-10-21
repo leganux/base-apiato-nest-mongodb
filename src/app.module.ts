@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from './user/user.module';
@@ -6,6 +6,9 @@ import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
 import { FileModule } from './file/file.module';
 import { WelcomesModule } from './welcomes/welcomes.module';
+import { JwtModule } from '@nestjs/jwt';
+import { User, UserSchema } from './user/schemas/user.schema';
+import { AccessMiddleware } from './middleware/access.middleware';
 
 @Module({
   imports: [
@@ -24,8 +27,23 @@ import { WelcomesModule } from './welcomes/welcomes.module';
     MailModule,
     FileModule,
     WelcomesModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET') || 'test',
+        signOptions: { expiresIn: '1h' },
+      }),
+      inject: [ConfigService],
+    }),
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(AccessMiddleware)
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}
