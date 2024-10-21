@@ -1,5 +1,5 @@
 export const rolesAndAccessConfig = {
-  users: {
+  user: {
     routes: [
       { path: '/', method: 'post', roles: ['Admin'] },
       { path: '/', method: 'get', roles: ['Admin', 'User'] },

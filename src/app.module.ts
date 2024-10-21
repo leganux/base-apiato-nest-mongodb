@@ -9,6 +9,7 @@ import { WelcomesModule } from './welcome/welcomes.module';
 import { JwtModule } from '@nestjs/jwt';
 import { User, UserSchema } from './user/schemas/user.schema';
 import { AccessMiddleware } from './core/middleware/access.middleware';
+import { rolesAndAccessConfig } from './core/config/rolesAndAccess.config';
 
 @Module({
   imports: [
@@ -44,6 +45,6 @@ export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AccessMiddleware)
-      .forRoutes({ path: '*', method: RequestMethod.ALL });
+      .forRoutes({ path: '/api/v1/user', method: RequestMethod.ALL });
   }
 }

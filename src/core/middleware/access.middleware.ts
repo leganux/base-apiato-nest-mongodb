@@ -19,7 +19,7 @@ export class AccessMiddleware implements NestMiddleware {
 
   async use(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log('Entra al middleware', );
+      console.log('Entra al middleware');
 
       let userRole: string = 'Public';
       let token = req?.headers?.authorization || '';
