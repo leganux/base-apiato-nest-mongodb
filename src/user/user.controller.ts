@@ -5,8 +5,6 @@ import { UserService } from './user.service';
 import { ApiatoController } from '../core/apiato/apiato.controller';
 import { ApiTags } from '@nestjs/swagger';
 
-
-
 @ApiTags('User')
 @Controller('/api/v1/user')
 export class UserController extends ApiatoController<
