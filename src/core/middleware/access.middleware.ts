@@ -1,14 +1,41 @@
-import {
-  Injectable,
-  NestMiddleware,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from '../../user/schemas/user.schema';
 import { rolesAndAccessConfig } from '../config/rolesAndAccess.config';
+
+function compareRoutes(templateRoute: string, actualRoute: string): boolean {
+  if (actualRoute.endsWith('/') && !templateRoute.endsWith('/')) {
+    templateRoute = templateRoute + '/';
+  }
+  if (!actualRoute.endsWith('/') && templateRoute.endsWith('/')) {
+    actualRoute = actualRoute + '/';
+  }
+
+  const templateRouteSplit = templateRoute.split('/');
+  const actualRouteSplit = actualRoute.split('/');
+
+  if (templateRouteSplit.length !== actualRouteSplit.length) {
+    return false;
+  }
+
+  for (let index = 0; index < templateRouteSplit.length; index++) {
+    const templateSegment = templateRouteSplit[index];
+    if (templateSegment.startsWith(':')) {
+      actualRouteSplit[index] = templateSegment;
+    }
+  }
+
+  actualRoute = actualRouteSplit.join('/');
+
+  if (templateRoute.endsWith('/') !== actualRoute.endsWith('/')) {
+    actualRoute = actualRoute + '/';
+  }
+
+  return actualRoute == templateRoute;
+}
 
 @Injectable()
 export class AccessMiddleware implements NestMiddleware {
@@ -19,8 +46,6 @@ export class AccessMiddleware implements NestMiddleware {
 
   async use(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log('Entra al middleware');
-
       let userRole: string = 'Public';
       let token = req?.headers?.authorization || '';
 
@@ -28,13 +53,46 @@ export class AccessMiddleware implements NestMiddleware {
       if (token && token.trim() != '') {
         const payload = this.jwtService.verify(token);
         const user = await this.userModel.findOne({ email: payload.email });
-
         userRole = user?.role || 'Public';
       }
+      let route = req.path;
 
-      const routeConfig = this.getRouteConfig(req.path, req.method);
+      if (!route.endsWith('/')) {
+        route = route + '/';
+      }
 
-      if (!routeConfig || !routeConfig.roles.includes(userRole)) {
+      route = req.method.toUpperCase() + '$$' + route;
+      if (route.includes('?')) {
+        route = route.split('?')[0];
+      }
+
+      let goNext = false;
+
+      for (const [key, val] of Object.entries(rolesAndAccessConfig)) {
+        for (const item of val.routes) {
+          const s =
+            item.method.toUpperCase() +
+            '$$' +
+            '/api/v1/' +
+            key +
+            item.path.trim();
+          if (s.includes(':')) {
+            const compare = compareRoutes(s, route);
+            if (compare && item.roles.includes(userRole)) {
+              goNext = true;
+            }
+          } else {
+            if (s == route && item.roles.includes(userRole)) {
+              goNext = true;
+              break;
+            }
+          }
+        }
+      }
+
+      if (goNext) {
+        next();
+      } else {
         return res.status(403).json({
           success: false,
           status: 403,
@@ -43,8 +101,6 @@ export class AccessMiddleware implements NestMiddleware {
           data: {},
         });
       }
-
-      next();
     } catch (error) {
       console.error(error);
       return res.status(403).json({

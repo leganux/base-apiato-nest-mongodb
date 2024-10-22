@@ -72,6 +72,8 @@ async function bootstrap() {
    Local: http://localhost:${port}/api
    Network: http://${getIPAddress()}:${port}/api
    
+   
+   Made with ❤️ !!
    `);
 }
 

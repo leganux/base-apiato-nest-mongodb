@@ -15,11 +15,13 @@ import {
 } from './core/config/rolesAndAccess.config';
 
 const getPaths = (rolesAndAccessConfig: RolesAndAccessConfig) => {
+  console.info('Loading middleware... ');
   const paths = [];
-  for (const [key] of Object.entries(rolesAndAccessConfig)) {
-    paths.push({ path: '/api/v1/' + key, method: RequestMethod.ALL });
+  for (const [key, val] of Object.entries(rolesAndAccessConfig)) {
+    console.info(key);
+    console.table(val.routes);
+    paths.push({ path: '/api/v1/' + key + '/*', method: RequestMethod.ALL });
   }
-  console.log(paths);
   return paths;
 };
 

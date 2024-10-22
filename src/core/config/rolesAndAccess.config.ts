@@ -12,26 +12,43 @@ export interface RolesAndAccessConfig {
   [key: string]: ConfigItem;
 }
 
+export const rolesMap = {
+  ALL: ['Admin', 'User', 'Public'],
+  REGISTERED: ['Admin', 'User'],
+  ADMIN: ['Admin'],
+  PUBLIC: ['Public'],
+};
+
 export const rolesAndAccessConfig: RolesAndAccessConfig = {
   user: {
     routes: [
-      { path: '/', method: 'post', roles: ['Admin'] },
-      { path: '/', method: 'get', roles: ['Admin', 'User'] },
-      { path: '/:id', method: 'get', roles: ['Admin', 'User'] },
+      { path: '/', method: 'POST', roles: rolesMap.ADMIN },
+      { path: '/many', method: 'POST', roles: rolesMap.ADMIN },
+      { path: '/', method: 'GET', roles: rolesMap.ALL },
+      { path: '/where', method: 'GET', roles: rolesMap.REGISTERED },
+      { path: '/:id', method: 'GET', roles: rolesMap.REGISTERED },
+      { path: '/:id', method: 'PUT', roles: rolesMap.REGISTERED },
+      { path: '/updateOrCreate', method: 'PUT', roles: rolesMap.REGISTERED },
+      { path: '/findAndUpdate', method: 'PUT', roles: rolesMap.REGISTERED },
+      { path: '/:id', method: 'DELETE', roles: rolesMap.ADMIN },
+      { path: '/datatable', method: 'POST', roles: rolesMap.ADMIN },
     ],
   },
   auth: {
     routes: [
-      { path: '/register', method: 'post', roles: ['Public'] },
-      { path: '/login', method: 'post', roles: ['Public'] },
-      { path: '/verify-email', method: 'get', roles: ['Public'] },
+      { path: '/register', method: 'POST', roles: rolesMap.PUBLIC },
+      { path: '/login', method: 'POST', roles: rolesMap.PUBLIC },
+      { path: '/verify-email', method: 'GET', roles: rolesMap.PUBLIC },
     ],
   },
   files: {
     routes: [
-      { path: '/upload', method: 'post', roles: ['Admin', 'User'] },
-      { path: '/upload/many', method: 'post', roles: ['Admin', 'User'] },
-      { path: '/view', method: 'get', roles: ['Admin', 'User', 'Public'] },
+      { path: '/upload', method: 'POST', roles: rolesMap.REGISTERED },
+      { path: '/upload/many', method: 'POST', roles: rolesMap.REGISTERED },
+      { path: '/view', method: 'GET', roles: rolesMap.ALL },
     ],
+  },
+  mail: {
+    routes: [{ path: '/send', method: 'POST', roles: rolesMap.ADMIN }],
   },
 };
