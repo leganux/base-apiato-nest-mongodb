@@ -43,7 +43,11 @@ export class AuthService {
 
     await newUser.save();
     await this.sendVerificationEmail(email, verificationToken, baseUrl);
-    return { message: 'Registration successful, verify your email' };
+    return {
+      status: 200,
+      success: true,
+      message: 'Registration successful, verify your email',
+    };
   }
 
   // Login
@@ -64,6 +68,9 @@ export class AuthService {
 
     const token = this.jwtService.sign({ email: user.email, sub: user._id });
     return {
+      status: 200,
+      success: true,
+      message: 'ok',
       access_token: token,
       user: {
         username: user.username,
@@ -88,7 +95,11 @@ export class AuthService {
     user.isVerified = true;
     user.verificationToken = undefined;
     await user.save();
-    return { message: 'Email verified successfully' };
+    return {
+      message: 'Email verified successfully',
+      status: 200,
+      success: true,
+    };
   }
 
   async sendVerificationEmail(email: string, token: string, baseUrl: string) {
