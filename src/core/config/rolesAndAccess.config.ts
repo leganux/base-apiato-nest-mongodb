@@ -24,7 +24,7 @@ export const rolesAndAccessConfig: RolesAndAccessConfig = {
     routes: [
       { path: '/', method: 'POST', roles: rolesMap.ADMIN },
       { path: '/many', method: 'POST', roles: rolesMap.ADMIN },
-      { path: '/', method: 'GET', roles: rolesMap.ALL },
+      { path: '/', method: 'GET', roles: rolesMap.ADMIN },
       { path: '/where', method: 'GET', roles: rolesMap.REGISTERED },
       { path: '/:id', method: 'GET', roles: rolesMap.REGISTERED },
       { path: '/:id', method: 'PUT', roles: rolesMap.REGISTERED },

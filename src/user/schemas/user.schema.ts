@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
+import { UserRoleInterface } from '../interfaces/user.interface';
 
 export type UserDocument = User & Document;
 
@@ -24,6 +25,9 @@ export class User {
   phone: string;
 
   @Prop()
+  picture?: string;
+
+  @Prop()
   bornDate: Date;
 
   @Prop()
@@ -45,9 +49,9 @@ export class User {
   verificationToken?: string;
 
   @Prop({
-    default: 'User',
+    default: UserRoleInterface.USER,
   })
-  role?: string;
+  role?: UserRoleInterface;
 
   @Prop({ type: MongooseSchema.Types.Date, default: null })
   deletedAt: Date;

@@ -4,7 +4,9 @@ import {
   IsString,
   IsDateString,
   IsPhoneNumber,
+  IsEnum,
 } from 'class-validator';
+import { UserRoleInterface } from '../interfaces/user.interface';
 
 export class UpdateUserDto {
   @IsOptional()
@@ -48,6 +50,14 @@ export class UpdateUserDto {
   timezone?: string;
 
   @IsOptional()
+  @IsEnum(UserRoleInterface)
+  role?: UserRoleInterface;
+
+  @IsOptional()
   @IsString()
   address?: string;
+
+  @IsOptional()
+  @IsString()
+  picture?: string;
 }

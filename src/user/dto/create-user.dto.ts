@@ -5,7 +5,9 @@ import {
   IsString,
   IsDateString,
   IsPhoneNumber,
+  IsEnum,
 } from 'class-validator';
+import { UserRoleInterface } from '../interfaces/user.interface';
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -51,4 +53,12 @@ export class CreateUserDto {
   @IsOptional()
   @IsString()
   address?: string;
+
+  @IsOptional()
+  @IsEnum(UserRoleInterface)
+  role?: UserRoleInterface;
+
+  @IsOptional()
+  @IsString()
+  picture?: string;
 }

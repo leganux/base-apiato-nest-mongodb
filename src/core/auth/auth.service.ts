@@ -4,11 +4,9 @@ import { Model } from 'mongoose';
 import { User } from '../../user/schemas/user.schema';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import * as nodemailer from 'nodemailer';
-
-import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { ConfigService } from '@nestjs/config';
 import { MailService } from '../mail/mail.service';
+import { UserRoleInterface } from '../../user/interfaces/user.interface';
 
 @Injectable()
 export class AuthService {
@@ -19,7 +17,13 @@ export class AuthService {
     private mailService: MailService,
   ) {}
 
-  async register(email: string, password: string) {
+  async register(
+    email: string,
+    password: string,
+    name: string,
+    username: string,
+    baseUrl: string,
+  ) {
     const existingUser = await this.userModel.findOne({ email });
     if (existingUser) {
       throw new BadRequestException('Email already in use');
@@ -29,15 +33,16 @@ export class AuthService {
     const verificationToken = this.jwtService.sign({ email });
 
     const newUser = new this.userModel({
-      name: 'User_' + Math.random(),
-      username: 'User_' + Math.random(),
+      name: name,
+      username: username,
       email,
       password: hashedPassword,
       verificationToken,
+      role: UserRoleInterface.USER,
     });
 
     await newUser.save();
-    await this.sendVerificationEmail(email, verificationToken);
+    await this.sendVerificationEmail(email, verificationToken, baseUrl);
     return { message: 'Registration successful, verify your email' };
   }
 
@@ -58,7 +63,18 @@ export class AuthService {
     }
 
     const token = this.jwtService.sign({ email: user.email, sub: user._id });
-    return { access_token: token };
+    return {
+      access_token: token,
+      user: {
+        username: user.username,
+        name: user.name,
+        email: user.email,
+        timezone: user.timezone,
+        country: user.country,
+        phone: user.phone,
+        picture: user.picture,
+      },
+    };
   }
 
   async verifyEmail(token: string) {
@@ -75,8 +91,8 @@ export class AuthService {
     return { message: 'Email verified successfully' };
   }
 
-  async sendVerificationEmail(email: string, token: string) {
-    const url = `http://localhost:3001/api/v1/auth/verify-email?token=${token}`;
+  async sendVerificationEmail(email: string, token: string, baseUrl: string) {
+    const url = baseUrl + `/api/v1/auth/verify-email?token=${token}`;
 
     await this.mailService.sendMail(
       'noreply@leganux.com',

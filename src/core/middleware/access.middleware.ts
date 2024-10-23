@@ -57,25 +57,29 @@ export class AccessMiddleware implements NestMiddleware {
       }
       let route = req.path;
 
-      if (!route.endsWith('/')) {
-        route = route + '/';
-      }
-
       route = req.method.toUpperCase() + '$$' + route;
       if (route.includes('?')) {
         route = route.split('?')[0];
       }
 
+      if (!route.endsWith('/')) {
+        route = route + '/';
+      }
       let goNext = false;
+
+      console.log(route, userRole);
 
       for (const [key, val] of Object.entries(rolesAndAccessConfig)) {
         for (const item of val.routes) {
-          const s =
+          let s =
             item.method.toUpperCase() +
             '$$' +
             '/api/v1/' +
             key +
             item.path.trim();
+          if (!s.endsWith('/')) {
+            s = s + '/';
+          }
           if (s.includes(':')) {
             const compare = compareRoutes(s, route);
             if (compare && item.roles.includes(userRole)) {
@@ -111,16 +115,5 @@ export class AccessMiddleware implements NestMiddleware {
         data: {},
       });
     }
-  }
-
-  private getRouteConfig(path: string, method: string) {
-    const routesConfig = Object.values(rolesAndAccessConfig).flatMap(
-      (config) => config.routes,
-    );
-    return routesConfig.find(
-      (route) =>
-        route.path === path &&
-        route.method.toLowerCase() === method.toLowerCase(),
-    );
   }
 }
