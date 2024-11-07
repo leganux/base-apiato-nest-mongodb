@@ -32,6 +32,7 @@ export const rolesAndAccessConfig: RolesAndAccessConfig = {
       { path: '/findAndUpdate', method: 'PUT', roles: rolesMap.REGISTERED },
       { path: '/:id', method: 'DELETE', roles: rolesMap.ADMIN },
       { path: '/datatable', method: 'POST', roles: rolesMap.ADMIN },
+      { path: '/schema', method: 'GET', roles: rolesMap.PUBLIC },
     ],
   },
   auth: {

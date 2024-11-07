@@ -114,6 +114,12 @@ export class ApiatoController<TCreateDto, TUpdateDto, TService> {
     return res.status(resp.status).json(resp);
   }
 
+  @Get('/schema')
+  async Schema(@Res() res: Response) {
+    const resp = await (this.service as any).Schema();
+    return res.status(resp.status).json(resp);
+  }
+
   @Get('/:id')
   async getOneById(
     @Param('id') id: string,

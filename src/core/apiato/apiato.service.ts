@@ -657,6 +657,26 @@ export abstract class ApiatoService<T, CreateDto, UpdateDto> {
     }
   }
 
+  async Schema(): Promise<IResponse> {
+    try {
+      let schema = this.model.schema.paths;
+
+      const fields = [];
+      if (schema['_id']) {
+        fields.push('_id');
+      }
+      for (const [key, val] of Object.entries(schema)) {
+        if (key !== '_id' && key !== '__v') {
+          fields.push(key);
+        }
+      }
+      return Responses.success({ schema: schema, fields }, 'Ok');
+    } catch (error) {
+      console.error(error);
+      return Responses.internalServerError(error.message);
+    }
+  }
+
   async Datatable(body: any, pipeline_: any, search_fields: any): Promise<any> {
     try {
       let pipeline2 = [];
