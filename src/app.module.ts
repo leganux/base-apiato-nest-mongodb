@@ -12,6 +12,7 @@ import { AccessMiddleware } from './core/middleware/access.middleware';
 import { rolesAndAccessConfig } from './core/config/rolesAndAccess.config';
 
 
+
 interface RoleAccess {
   path: string;
   method: string;
@@ -54,7 +55,7 @@ const getPaths = (config: RolesAndAccessConfig) => {
     MailModule,
     FileModule,
     WelcomesModule,
-  
+
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
