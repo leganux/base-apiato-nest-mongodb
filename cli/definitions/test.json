@@ -1,0 +1,25 @@
+{
+    "version": 1,
+    "name": "test",
+    "description": "Test module for CLI tool",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "mandatory": true
+        },
+        {
+            "name": "status",
+            "type": "enum",
+            "mandatory": true,
+            "values": ["active", "inactive", "pending"],
+            "default": "pending"
+        },
+        {
+            "name": "createdBy",
+            "type": "relationship",
+            "mandatory": true,
+            "relation": "user._id"
+        }
+    ]
+}
