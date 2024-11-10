@@ -9,15 +9,27 @@ import { WelcomesModule } from './welcome/welcomes.module';
 import { JwtModule } from '@nestjs/jwt';
 import { User, UserSchema } from './user/schemas/user.schema';
 import { AccessMiddleware } from './core/middleware/access.middleware';
-import {
-  RolesAndAccessConfig,
-  rolesAndAccessConfig,
-} from './core/config/rolesAndAccess.config';
+import { rolesAndAccessConfig } from './core/config/rolesAndAccess.config';
 
-const getPaths = (rolesAndAccessConfig: RolesAndAccessConfig) => {
+
+interface RoleAccess {
+  path: string;
+  method: string;
+  roles: string[];
+}
+
+interface ConfigItem {
+  routes: RoleAccess[];
+}
+
+interface RolesAndAccessConfig {
+  [key: string]: ConfigItem;
+}
+
+const getPaths = (config: RolesAndAccessConfig) => {
   console.info('Loading middleware... ');
   const paths = [];
-  for (const [key, val] of Object.entries(rolesAndAccessConfig)) {
+  for (const [key, val] of Object.entries(config)) {
     console.info(key);
     console.table(val.routes);
     paths.push({ path: '/api/v1/' + key + '/*', method: RequestMethod.ALL });
@@ -42,6 +54,7 @@ const getPaths = (rolesAndAccessConfig: RolesAndAccessConfig) => {
     MailModule,
     FileModule,
     WelcomesModule,
+  
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({

@@ -1,0 +1,17 @@
+{
+    "version": 1,
+    "name": "brand",
+    "description": "Table that stores brand of products",
+    "fields": [
+        {
+            "name": "brand",
+            "type": "string",
+            "mandatory": true
+        },
+        {
+            "name": "description",
+            "type": "string",
+            "mandatory": false
+        }
+    ]
+}
