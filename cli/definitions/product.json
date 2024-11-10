@@ -1,0 +1,41 @@
+{
+    "version": 1,
+    "name": "product",
+    "description": "Table that stores products",
+    "fields": [
+        {
+            "name": "product",
+            "type": "string",
+            "mandatory": true
+        },
+        {
+            "name": "image",
+            "type": "string",
+            "mandatory": false
+        },
+        {
+            "name": "stock",
+            "type": "string",
+            "mandatory": true,
+            "default": 0
+        },
+        {
+            "name": "category",
+            "type": "enum",
+            "values": [
+                "arts",
+                "pharmacy",
+                "food",
+                "liquor"
+            ],
+            "mandatory": true,
+            "default": "arts"
+        },
+        {
+            "name": "brand",
+            "type": "relationship",
+            "mandatory": true,
+            "relation": "brand._id"
+        }
+    ]
+}
