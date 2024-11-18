@@ -4,12 +4,22 @@
     "description": "Table that stores brand of products",
     "fields": [
         {
-            "name": "brand",
+            "name": "name",
             "type": "string",
             "mandatory": true
         },
         {
             "name": "description",
+            "type": "string",
+            "mandatory": false
+        },
+        {
+            "name": "image",
+            "type": "string",
+            "mandatory": false
+        },
+        {
+            "name": "key",
             "type": "string",
             "mandatory": false
         }

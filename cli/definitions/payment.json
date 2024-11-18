@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "name": "payment",
+  "description": "Table that stores brand of products",
+  "fields": [
+    {
+      "name": "source",
+      "type": "enum",
+      "mandatory": true,
+      "values": [
+        "CASH",
+        "OP_CARD",
+        "OP_SPEI",
+        "OP_STORE",
+        "MP_GENERAL"
+      ],
+      "default": "CASH"
+    },
+    {
+      "name": "client",
+      "type": "relationship",
+      "mandatory": true,
+      "relation": "user._id"
+    },
+    {
+      "name": "image_payment",
+      "type": "string",
+      "mandatory": false
+    },
+    {
+      "name": "webhooks",
+      "type": "string",
+      "mandatory": false
+    },
+    {
+      "name": "status",
+      "type": "enum",
+      "mandatory": true,
+      "values": [
+        "PENDING",
+        "PAYED",
+        "CANCELLED",
+        "REJECTED"
+      ],
+      "default": "PENDING"
+    },
+    {
+      "name": "module",
+      "type": "enum",
+      "mandatory": true,
+      "values": [
+        "ORDERS",
+        "OTHER"
+      ],
+      "default": "ORDERS"
+    },
+    {
+      "name": "total",
+      "type": "number",
+      "mandatory": true,
+      "default": 0
+    },
+    {
+      "name": "discount",
+      "type": "number",
+      "mandatory": true,
+      "default": 0
+    },
+    {
+      "name": "no_products",
+      "type": "number",
+      "mandatory": true,
+      "default": 0
+    },
+    {
+      "name": "date_payment",
+      "type": "date",
+      "mandatory": false
+    },
+    {
+      "name": "date_cancelled",
+      "type": "date",
+      "mandatory": false
+    },
+    {
+      "name": "date_rejected",
+      "type": "date",
+      "mandatory": false
+    }
+  ]
+}

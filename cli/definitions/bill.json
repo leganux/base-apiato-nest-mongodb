@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "name": "bill",
+  "description": "Table that stores bill information",
+  "fields": [
+    {
+      "name": "client",
+      "type": "relationship",
+      "mandatory": true,
+      "relation": "user._id"
+    },
+    {
+      "name": "pdf",
+      "type": "string",
+      "mandatory": false
+    },
+    {
+      "name": "xml",
+      "type": "string",
+      "mandatory": false
+    },
+    {
+      "name": "status",
+      "type": "enum",
+      "mandatory": true,
+      "values": [
+        "PENDING",
+        "CREATED",
+        "DOWNLOADED",
+        "REJECTED",
+        "CANCELLED"
+      ],
+      "default": "PENDING"
+    },
+    {
+      "name": "module",
+      "type": "enum",
+      "mandatory": true,
+      "values": [
+        "ORDERS",
+        "OTHER"
+      ],
+      "default": "ORDERS"
+    },
+    {
+      "name": "total",
+      "type": "number",
+      "mandatory": true,
+      "default": 0
+    },
+    {
+      "name": "no_products",
+      "type": "number",
+      "mandatory": true,
+      "default": 0
+    },
+    {
+      "name": "date_created",
+      "type": "date",
+      "mandatory": false
+    },
+    {
+      "name": "date_downloaded",
+      "type": "date",
+      "mandatory": false
+    },
+    {
+      "name": "date_cancelled",
+      "type": "date",
+      "mandatory": false
+    },
+    {
+      "name": "date_rejected",
+      "type": "date",
+      "mandatory": false
+    }
+  ]
+}

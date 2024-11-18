@@ -1,0 +1,32 @@
+{
+    "version": 1,
+    "name": "supplier",
+    "description": "Table that stores suppliers for products",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "mandatory": true
+        },
+        {
+            "name": "description",
+            "type": "string",
+            "mandatory": false
+        },
+        {
+            "name": "image",
+            "type": "string",
+            "mandatory": false
+        },
+        {
+            "name": "key",
+            "type": "string",
+            "mandatory": false
+        },
+        {
+            "name": "notes",
+            "type": "string",
+            "mandatory": false
+        }
+    ]
+}

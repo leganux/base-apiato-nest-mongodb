@@ -2,11 +2,11 @@ import * as fs from 'fs';
 import { Definition } from '../interfaces';
 
 export function updateRolesAndAccess(definition: Definition, configPath: string): void {
-    // Read the existing config file content
-    const configContent = fs.readFileSync(configPath, 'utf-8');
-    
-    // Create the new module entry
-    const moduleEntry = `  ${definition.name}: {
+  // Read the existing config file content
+  const configContent = fs.readFileSync(configPath, 'utf-8');
+
+  // Create the new module entry
+  const moduleEntry = `  ${definition.name}: {
     routes: [
       { path: '/', method: 'POST', roles: rolesMap.ADMIN },
       { path: '/many', method: 'POST', roles: rolesMap.ADMIN },
@@ -22,34 +22,34 @@ export function updateRolesAndAccess(definition: Definition, configPath: string)
     ]
   }`;
 
-    // Find the position to insert the new module
-    const configStartMatch = configContent.match(/export const rolesAndAccessConfig[^{]*{/);
-    if (!configStartMatch) {
-        throw new Error('Could not find rolesAndAccessConfig in the file');
-    }
+  // Find the position to insert the new module
+  const configStartMatch = configContent.match(/export const rolesAndAccessConfig[^{]*{/);
+  if (!configStartMatch) {
+    throw new Error('Could not find rolesAndAccessConfig in the file');
+  }
 
-    const configStart = configStartMatch.index! + configStartMatch[0].length;
-    const existingConfig = configContent.slice(0, configStart);
-    let remainingContent = configContent.slice(configStart);
+  const configStart = configStartMatch.index! + configStartMatch[0].length;
+  const existingConfig = configContent.slice(0, configStart);
+  let remainingContent = configContent.slice(configStart);
 
-    // Remove any existing module configuration
-    const moduleRegex = new RegExp(`${definition.name}:\\s*{[^}]*},[\\s]*`, 'g');
-    remainingContent = remainingContent.replace(moduleRegex, '');
+  // Remove any existing module configuration
+  const moduleRegex = new RegExp(`${definition.name}:\\s*{[^}]*},[\\s]*`, 'g');
+  remainingContent = remainingContent.replace(moduleRegex, '');
 
-    // Find the last module entry
-    const lastModuleMatch = remainingContent.match(/[a-zA-Z]+:\s*{[^}]*},?\s*}/);
-    if (!lastModuleMatch) {
-        throw new Error('Could not find any module configurations');
-    }
+  // Find the last module entry
+  const lastModuleMatch = remainingContent.match(/[a-zA-Z]+:\s*{[^}]*},?\s*}/);
+  if (!lastModuleMatch) {
+    throw new Error('Could not find any module configurations');
+  }
 
-    // Insert the new module before the last closing brace
-    const insertPosition = remainingContent.lastIndexOf('}');
-    const updatedContent = 
-        existingConfig +
-        remainingContent.slice(0, insertPosition) +
-        (remainingContent[insertPosition - 1] !== '{' ? ',\n' : '') +
-        moduleEntry +
-        '\n};\n';
+  // Insert the new module before the last closing brace
+  const insertPosition = remainingContent.lastIndexOf('}');
+  const updatedContent =
+    existingConfig +
+    remainingContent.slice(0, insertPosition) +
+    (remainingContent[insertPosition - 1] !== '{' ? ',\n' : '') +
+    moduleEntry +
+    '\n};\n';
 
-    fs.writeFileSync(configPath, updatedContent);
+  fs.writeFileSync(configPath, updatedContent);
 }

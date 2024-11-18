@@ -1,0 +1,32 @@
+{
+    "version": 1,
+    "name": "measurement_unit",
+    "description": "Table that stores unit measuments",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "mandatory": true
+        },
+        {
+            "name": "description",
+            "type": "string",
+            "mandatory": false
+        },
+        {
+            "name": "ISO",
+            "type": "string",
+            "mandatory": false
+        },
+        {
+            "name": "key",
+            "type": "string",
+            "mandatory": false
+        },
+        {
+            "name": "sub_count",
+            "type": "number",
+            "mandatory": 0
+        }
+    ]
+}

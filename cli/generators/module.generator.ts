@@ -2,8 +2,8 @@ import { Definition } from '../interfaces';
 import { capitalizeFirst } from '../utils';
 
 export function generateModule(definition: Definition): string {
-    const className = capitalizeFirst(definition.name);
-    return `import { Module } from '@nestjs/common';
+  const className = capitalizeFirst(definition.name);
+  return `import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ${className}Controller } from './${definition.name}.controller';
 import { ${className}Service } from './${definition.name}.service';

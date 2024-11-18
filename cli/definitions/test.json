@@ -12,7 +12,11 @@
             "name": "status",
             "type": "enum",
             "mandatory": true,
-            "values": ["active", "inactive", "pending"],
+            "values": [
+                "active",
+                "inactive",
+                "pending"
+            ],
             "default": "pending"
         },
         {

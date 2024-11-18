@@ -4,38 +4,120 @@
     "description": "Table that stores products",
     "fields": [
         {
-            "name": "product",
+            "name": "name",
             "type": "string",
             "mandatory": true
         },
         {
-            "name": "image",
+            "name": "description",
+            "type": "string",
+            "mandatory": true
+        },
+        {
+            "name": "sat-key",
+            "type": "string",
+            "mandatory": true
+        },
+        {
+            "name": "pricncipal-key",
             "type": "string",
             "mandatory": false
         },
         {
-            "name": "stock",
+            "name": "secondary-key",
             "type": "string",
-            "mandatory": true,
-            "default": 0
+            "mandatory": false
         },
         {
-            "name": "category",
-            "type": "enum",
-            "values": [
-                "arts",
-                "pharmacy",
-                "food",
-                "liquor"
-            ],
-            "mandatory": true,
-            "default": "arts"
+            "name": "thertiary-key",
+            "type": "string",
+            "mandatory": false
+        },
+        {
+            "name": "barcode",
+            "type": "string",
+            "mandatory": false
+        },
+        {
+            "name": "QR",
+            "type": "string",
+            "mandatory": false
+        },
+        {
+            "name": "images",
+            "type": "mixed",
+            "mandatory": false
         },
         {
             "name": "brand",
             "type": "relationship",
             "mandatory": true,
             "relation": "brand._id"
+        },
+        {
+            "name": "status",
+            "type": "enum",
+            "values": [
+                "active",
+                "not_listed",
+                "inactive",
+                "deleted"
+            ],
+            "mandatory": true,
+            "default": "not_listed"
+        },
+        {
+            "name": "measurement_unit",
+            "type": "relationship",
+            "mandatory": true,
+            "relation": "measurement_unit._id"
+        },
+        {
+            "name": "category",
+            "type": "relationship",
+            "mandatory": true,
+            "relation": "category._id"
+        },
+        {
+            "name": "taxes",
+            "type": "relationship",
+            "mandatory": true,
+            "relation": "taxes._id"
+        },
+        {
+            "name": "main_supplier",
+            "type": "relationship",
+            "mandatory": true,
+            "relation": "supplier._id"
+        },
+        {
+            "name": "location",
+            "type": "string",
+            "mandatory": false
+        },
+        {
+            "name": "max",
+            "type": "number",
+            "mandatory": true,
+            "default": -1
+        },
+        {
+            "name": "min",
+            "type": "number",
+            "mandatory": true,
+            "default": 0
+        },
+        {
+            "name": "reorder",
+            "type": "number",
+            "mandatory": true,
+            "default": 1
+        },
+        {
+            "name": "discount",
+            "type": "relationship",
+            "mandatory": true,
+            "relation": "discount._id"
         }
     ]
 }

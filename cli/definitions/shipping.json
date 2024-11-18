@@ -1,0 +1,110 @@
+{
+  "version": 1,
+  "name": "shipping",
+  "description": "Table that stores shipping information",
+  "fields": [
+    {
+      "name": "carrier",
+      "type": "enum",
+      "mandatory": true,
+      "values": [
+        "DHL",
+        "FEDEX",
+        "REDPACK",
+        "NOVENTA9MINUTOS",
+        "UPS",
+        "SENDEX"
+      ],
+      "default": "DHL"
+    },
+    {
+      "name": "client",
+      "type": "relationship",
+      "mandatory": true,
+      "relation": "user._id"
+    },
+    {
+      "name": "webhooks",
+      "type": "string",
+      "mandatory": false
+    },
+    {
+      "name": "status",
+      "type": "enum",
+      "mandatory": true,
+      "values": [
+        "PENDING",
+        "QUOTED",
+        "LABELED",
+        "PICKED_UP",
+        "ON_TRACK",
+        "CANCELLED",
+        "REJECTED"
+      ],
+      "default": "PENDING"
+    },
+    {
+      "name": "module",
+      "type": "enum",
+      "mandatory": true,
+      "values": [
+        "ORDERS",
+        "OTHER"
+      ],
+      "default": "ORDERS"
+    },
+    {
+      "name": "type",
+      "type": "enum",
+      "mandatory": true,
+      "values": [
+        "ENVELOPE",
+        "BOX",
+        "PALLET"
+      ],
+      "default": "BOX"
+    },
+    {
+      "name": "total",
+      "type": "number",
+      "mandatory": true,
+      "default": 0
+    },
+    {
+      "name": "no_products",
+      "type": "number",
+      "mandatory": true,
+      "default": 0
+    },
+    {
+      "name": "date_quoted",
+      "type": "date",
+      "mandatory": false
+    },
+    {
+      "name": "date_labeled",
+      "type": "date",
+      "mandatory": false
+    },
+    {
+      "name": "date_picked_up",
+      "type": "date",
+      "mandatory": false
+    },
+    {
+      "name": "date_tracked",
+      "type": "date",
+      "mandatory": false
+    },
+    {
+      "name": "date_cancelled",
+      "type": "date",
+      "mandatory": false
+    },
+    {
+      "name": "date_rejected",
+      "type": "date",
+      "mandatory": false
+    }
+  ]
+}

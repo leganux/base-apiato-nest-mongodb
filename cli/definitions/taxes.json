@@ -1,0 +1,51 @@
+{
+    "version": 1,
+    "name": "tax",
+    "description": "Table that stores taxes of products",
+    "fields": [
+        {
+            "name": "name",
+            "type": "enum",
+            "values": [
+                "IVA",
+                "ISR",
+                "NONE"
+            ],
+            "mandatory": true,
+            "default": "NONE"
+        },
+        {
+            "name": "description",
+            "type": "string",
+            "mandatory": false
+        },
+        {
+            "name": "key",
+            "type": "string",
+            "mandatory": false
+        },
+        {
+            "name": "notes",
+            "type": "string",
+            "mandatory": false
+        },
+        {
+            "name": "value",
+            "type": "number",
+            "mandatory": true,
+            "default": 0
+        },
+        {
+            "name": "IsRetention",
+            "type": "boolean",
+            "mandatory": true,
+            "default": false
+        },
+        {
+            "name": "IsFederalTax",
+            "type": "boolean",
+            "mandatory": true,
+            "default": true
+        }
+    ]
+}

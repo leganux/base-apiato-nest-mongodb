@@ -51,6 +51,9 @@ export function generateCreateDto(definition: Definition): string {
             case 'relationship':
                 decorators.push('@IsMongoId()');
                 break;
+            case 'mixed':
+                decorators.push('');
+                break;
         }
 
         decorators.forEach(decorator => {
@@ -61,6 +64,8 @@ export function generateCreateDto(definition: Definition): string {
             dtoContent += `  ${field.name}: ${className}${capitalizeFirst(field.name)}Enum;\n\n`;
         } else if (field.type === 'relationship') {
             dtoContent += `  ${field.name}: string;\n\n`;
+        } else if (field.type === 'mixed') {
+            dtoContent += `  ${field.name}?: any;\n\n`;
         } else {
             dtoContent += `  ${field.name}: ${field.type};\n\n`;
         }

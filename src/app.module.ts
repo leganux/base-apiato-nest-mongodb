@@ -10,6 +10,16 @@ import { JwtModule } from '@nestjs/jwt';
 import { User, UserSchema } from './user/schemas/user.schema';
 import { AccessMiddleware } from './core/middleware/access.middleware';
 import { rolesAndAccessConfig } from './core/config/rolesAndAccess.config';
+import { PaymentModule } from './payment/payment.module';
+import { ShippingModule } from './shipping/shipping.module';
+import { BillModule } from './bill/bill.module';
+import { CategoryModule } from './category/category.module';
+import { DiscountModule } from './discount/discount.module';
+import { Measurement_unitModule } from './measurement_unit/measurement_unit.module';
+import { SupplierModule } from './supplier/supplier.module';
+import { TaxModule } from './tax/tax.module';
+import { BrandModule } from './brand/brand.module';
+import { ProductModule } from './product/product.module';
 
 
 
@@ -55,6 +65,16 @@ const getPaths = (config: RolesAndAccessConfig) => {
     MailModule,
     FileModule,
     WelcomesModule,
+    PaymentModule,
+    ShippingModule,
+    BillModule,
+    CategoryModule,
+    DiscountModule,
+    Measurement_unitModule,
+    SupplierModule,
+    TaxModule,
+    BrandModule,
+    ProductModule,
 
     JwtModule.registerAsync({
       imports: [ConfigModule],

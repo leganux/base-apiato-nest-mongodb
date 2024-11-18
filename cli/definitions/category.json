@@ -1,0 +1,22 @@
+{
+    "version": 1,
+    "name": "category",
+    "description": "Table that stores category of products",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "mandatory": true
+        },
+        {
+            "name": "description",
+            "type": "string",
+            "mandatory": false
+        },
+        {
+            "name": "key",
+            "type": "string",
+            "mandatory": false
+        }
+    ]
+}

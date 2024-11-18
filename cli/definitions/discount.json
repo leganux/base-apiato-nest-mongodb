@@ -1,0 +1,28 @@
+{
+    "version": 1,
+    "name": "discount",
+    "description": "Table that stores discount of products",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "mandatory": true
+        },
+        {
+            "name": "description",
+            "type": "string",
+            "mandatory": false
+        },
+        {
+            "name": "key",
+            "type": "string",
+            "mandatory": false
+        },
+        {
+            "name": "value",
+            "type": "number",
+            "mandatory": true,
+            "default": 0
+        }
+    ]
+}

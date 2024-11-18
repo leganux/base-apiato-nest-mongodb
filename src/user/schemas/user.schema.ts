@@ -1,10 +1,15 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 import { UserRoleInterface } from '../interfaces/user.interface';
+import { UserAddress } from './user-address.schema';
 
 export type UserDocument = User & Document;
 
-@Schema({ timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } })
+@Schema({ 
+  timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' },
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
+})
 export class User {
   @Prop({ required: true })
   username: string;
@@ -40,9 +45,6 @@ export class User {
   timezone: string;
 
   @Prop()
-  address: string;
-
-  @Prop()
   isVerified: boolean;
 
   @Prop()
@@ -58,3 +60,17 @@ export class User {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+// Virtual populate for addresses
+UserSchema.virtual('addresses', {
+  ref: 'UserAddress',
+  localField: '_id',
+  foreignField: 'user',
+  justOne: false,
+  options: { sort: { is_default: -1 } } // Sort by default address first
+});
+
+// Indexes
+UserSchema.index({ email: 1 }, { unique: true });
+UserSchema.index({ username: 1 });
+UserSchema.index({ deletedAt: 1 });
