@@ -71,9 +71,9 @@ export class BillService {
       }
 
       const cfdi: FacturaCFDI = {
-        Serie: config.defaultSettings?.serie || 'A',
-        Currency: config.defaultSettings?.currency || 'MXN',
-        ExpeditionPlace: config.defaultSettings?.expeditionPlace || address.postal_code,
+        Serie: config.default_settings?.serie || 'A',
+        Currency: config.default_settings?.currency || 'MXN',
+        ExpeditionPlace: config.default_settings?.expedition_place || address.postal_code,
         PaymentForm: createBillDto.paymentForm,
         PaymentMethod: createBillDto.paymentMethod,
         CfdiType: 'I',
@@ -110,7 +110,7 @@ export class BillService {
       const updatedBill = await this.billModel.findByIdAndUpdate(
         bill._id,
         {
-          facturamaId: response.Id,
+          facturama_id: response.Id,
           uuid: response.Complement?.TaxStamp?.Uuid,
           serie: response.Serie,
           folio: response.Folio,
@@ -156,12 +156,12 @@ export class BillService {
       throw new BadRequestException('Can only cancel generated bills');
     }
 
-    if (!bill.facturamaId) {
+    if (!bill.facturama_id) {
       throw new BadRequestException('Bill has no Facturama ID');
     }
 
     try {
-      await this.facturamaService.cancelCFDI(bill.facturamaId, motive);
+      await this.facturamaService.cancelCFDI(bill.facturama_id, motive);
 
       const cancelledBill = await this.billModel.findByIdAndUpdate(
         id,
@@ -186,20 +186,20 @@ export class BillService {
 
   async downloadPDF(id: string): Promise<Buffer> {
     const bill = await this.billModel.findById(id);
-    if (!bill || !bill.facturamaId) {
+    if (!bill || !bill.facturama_id) {
       throw new NotFoundException('Bill not found or not generated');
     }
 
-    return this.facturamaService.downloadPDF(bill.facturamaId);
+    return this.facturamaService.downloadPDF(bill.facturama_id);
   }
 
   async downloadXML(id: string): Promise<Buffer> {
     const bill = await this.billModel.findById(id);
-    if (!bill || !bill.facturamaId) {
+    if (!bill || !bill.facturama_id) {
       throw new NotFoundException('Bill not found or not generated');
     }
 
-    return this.facturamaService.downloadXML(bill.facturamaId);
+    return this.facturamaService.downloadXML(bill.facturama_id);
   }
 
   async findOne(id: string): Promise<Bill> {

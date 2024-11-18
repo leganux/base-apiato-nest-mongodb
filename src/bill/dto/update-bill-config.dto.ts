@@ -3,7 +3,7 @@ import { Type } from 'class-transformer';
 
 class EnvironmentConfigDto {
   @IsString()
-  baseUrl: string;
+  base_url: string;
 
   @IsString()
   username: string;
@@ -19,7 +19,7 @@ class DefaultSettingsDto {
 
   @IsString()
   @IsOptional()
-  expeditionPlace?: string;
+  expedition_place?: string;
 
   @IsString()
   @IsOptional()
@@ -29,7 +29,7 @@ class DefaultSettingsDto {
 export class UpdateBillConfigDto {
   @IsBoolean()
   @IsOptional()
-  isDevelopment?: boolean;
+  is_development?: boolean;
 
   @IsObject()
   @ValidateNested()
@@ -45,18 +45,18 @@ export class UpdateBillConfigDto {
 
   @IsBoolean()
   @IsOptional()
-  isActive?: boolean;
+  is_active?: boolean;
 
   @IsObject()
   @ValidateNested()
   @Type(() => DefaultSettingsDto)
   @IsOptional()
-  defaultSettings?: DefaultSettingsDto;
+  default_settings?: DefaultSettingsDto;
 
   @IsArray()
   @IsString({ each: true })
   @IsOptional()
-  allowedRFCs?: string[];
+  allowed_rfcs?: string[];
 
   @IsObject()
   @IsOptional()

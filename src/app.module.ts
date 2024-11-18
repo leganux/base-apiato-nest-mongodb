@@ -9,7 +9,7 @@ import { WelcomesModule } from './welcome/welcomes.module';
 import { JwtModule } from '@nestjs/jwt';
 import { User, UserSchema } from './user/schemas/user.schema';
 import { AccessMiddleware } from './core/middleware/access.middleware';
-import { rolesAndAccessConfig } from './core/config/rolesAndAccess.config';
+import { getRolesAndAccessConfig } from './core/config/rolesAndAccess.config';
 import { PaymentModule } from './payment/payment.module';
 import { ShippingModule } from './shipping/shipping.module';
 import { BillModule } from './bill/bill.module';
@@ -20,8 +20,9 @@ import { SupplierModule } from './supplier/supplier.module';
 import { TaxModule } from './tax/tax.module';
 import { BrandModule } from './brand/brand.module';
 import { ProductModule } from './product/product.module';
-
-
+import { RolesAccessModule } from './core/roles-access/roles-access.module';
+import { RolesAccessService } from './core/roles-access/roles-access.service';
+import { log } from 'console';
 
 interface RoleAccess {
   path: string;
@@ -42,7 +43,8 @@ const getPaths = (config: RolesAndAccessConfig) => {
   const paths = [];
   for (const [key, val] of Object.entries(config)) {
     console.info(key);
-    console.table(val.routes);
+
+    console.table(JSON.parse(JSON.stringify(val.routes)));
     paths.push({ path: '/api/v1/' + key + '/*', method: RequestMethod.ALL });
   }
   return paths;
@@ -75,6 +77,7 @@ const getPaths = (config: RolesAndAccessConfig) => {
     TaxModule,
     BrandModule,
     ProductModule,
+    RolesAccessModule,
 
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -92,9 +95,12 @@ const getPaths = (config: RolesAndAccessConfig) => {
   providers: [],
 })
 export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
+  constructor(private readonly rolesAccessService: RolesAccessService) { }
+
+  async configure(consumer: MiddlewareConsumer) {
+    const config = await getRolesAndAccessConfig(this.rolesAccessService);
     consumer
       .apply(AccessMiddleware)
-      .forRoutes(...getPaths(rolesAndAccessConfig));
+      .forRoutes(...getPaths(config));
   }
 }

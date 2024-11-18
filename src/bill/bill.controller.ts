@@ -1,10 +1,10 @@
-import { 
-  Controller, 
-  Post, 
-  Body, 
-  Get, 
-  Param, 
-  Put, 
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  Put,
   UseGuards,
   Req,
   Res,
@@ -15,24 +15,34 @@ import { Response } from 'express';
 import { BillService } from './services/bill.service';
 import { FacturamaService } from './services/facturama.service';
 import { CreateBillDto } from './dto/create-bill.dto';
+import { UpdateBillDto } from './dto/update-bill.dto';
 import { UpdateBillConfigDto } from './dto/update-bill-config.dto';
+import { ApiatoController } from '../core/apiato/apiato.controller';
+import { ApiBody, ApiQuery, ApiTags } from '@nestjs/swagger';
+
+@ApiTags('Bill')
+@Controller('/api/v1/bill')
+export class BillController extends ApiatoController<
+  CreateBillDto,
+  UpdateBillDto,
+  BillService
+> {
 
 
 
-
-@Controller('bills')
-export class BillController {
   constructor(
     private readonly billService: BillService,
     private readonly facturamaService: FacturamaService,
-  ) {}
+  ) {
+    super(billService);
+  }
 
   @Post()
   async create(@Body() createBillDto: CreateBillDto, @Req() req: any) {
     return this.billService.create(createBillDto, req.user._id);
   }
 
-  @Post(':id/cancel')
+  @Post('/:id/cancel')
   async cancel(
     @Param('id') id: string,
     @Body('motive') motive: string,
@@ -43,13 +53,13 @@ export class BillController {
     return this.billService.cancel(id, motive);
   }
 
-  @Get(':id/pdf')
+  @Get('/:id/pdf')
   async downloadPDF(
     @Param('id') id: string,
     @Res({ passthrough: true }) res: Response,
   ): Promise<StreamableFile> {
     const pdfBuffer = await this.billService.downloadPDF(id);
-    
+
     res.set({
       'Content-Type': 'application/pdf',
       'Content-Disposition': `attachment; filename="bill-${id}.pdf"`,
@@ -58,13 +68,13 @@ export class BillController {
     return new StreamableFile(pdfBuffer);
   }
 
-  @Get(':id/xml')
+  @Get('/:id/xml')
   async downloadXML(
     @Param('id') id: string,
     @Res({ passthrough: true }) res: Response,
   ): Promise<StreamableFile> {
     const xmlBuffer = await this.billService.downloadXML(id);
-    
+
     res.set({
       'Content-Type': 'application/xml',
       'Content-Disposition': `attachment; filename="bill-${id}.xml"`,
@@ -73,28 +83,28 @@ export class BillController {
     return new StreamableFile(xmlBuffer);
   }
 
-  @Get('user')
+  @Get('/user')
   async findUserBills(@Req() req: any) {
     return this.billService.findByUser(req.user._id);
   }
 
-  @Get('payment/:paymentId')
+  @Get('/payment/:paymentId')
   async findPaymentBills(@Param('paymentId') paymentId: string) {
     return this.billService.findByPayment(paymentId);
   }
 
-  @Get(':id')
+  @Get('/:id')
   async findOne(@Param('id') id: string) {
     return this.billService.findOne(id);
   }
 
   // Configuration endpoints (admin only)
-  @Get('config/current')
+  @Get('/config/current')
   async getConfig() {
     return this.facturamaService.getConfig();
   }
 
-  @Put('config')
+  @Put('/config')
   async updateConfig(@Body() updateConfigDto: UpdateBillConfigDto) {
     return this.facturamaService.updateConfig(updateConfigDto);
   }

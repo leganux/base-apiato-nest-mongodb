@@ -6,6 +6,7 @@ import { BillConfig } from '../schemas/bill-config.schema';
 import { Bill } from '../schemas/bill.schema';
 import { FacturamaConfig, FacturamaCustomer, FacturaCFDI, FacturamaResponse } from '../interfaces/facturama.interface';
 import { defaultBillConfig } from '../schemas/bill-config.schema';
+import { UpdateBillConfigDto } from '../dto/update-bill-config.dto';
 
 @Injectable()
 export class FacturamaService implements OnModuleInit {
@@ -118,11 +119,41 @@ export class FacturamaService implements OnModuleInit {
     }
   }
 
-  async updateConfig(config: Partial<FacturamaConfig>): Promise<void> {
+  async updateConfig(configDto: UpdateBillConfigDto): Promise<void> {
     try {
+      const updateData: Partial<BillConfig> = {};
+
+      if (configDto.is_development !== undefined) {
+        updateData.is_development = configDto.is_development;
+      }
+
+      if (configDto.sandbox) {
+        updateData.sandbox = configDto.sandbox;
+      }
+
+      if (configDto.production) {
+        updateData.production = configDto.production;
+      }
+
+      if (configDto.is_active !== undefined) {
+        updateData.is_active = configDto.is_active;
+      }
+
+      if (configDto.default_settings) {
+        updateData.default_settings = configDto.default_settings;
+      }
+
+      if (configDto.allowed_rfcs) {
+        updateData.allowed_rfcs = configDto.allowed_rfcs;
+      }
+
+      if (configDto.metadata) {
+        updateData.metadata = configDto.metadata;
+      }
+
       await this.billConfigModel.updateOne(
         { is_active: true },
-        { $set: config },
+        { $set: updateData },
         { upsert: true }
       );
       await this.initializeConfig();
